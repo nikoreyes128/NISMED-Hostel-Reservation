@@ -1,49 +1,26 @@
 [
-{
-  "model": "room.roomtype",
-  "pk": 1,
-  "fields": {
-    "name": "C",
-    "available_rooms": 18,
-    "amenities": [
-      10,
-      9,
-      2,
-      3
-    ]
+  {
+    "model": "room.roomtype",
+    "pk": 1,
+    "fields": {
+      "name": "C",
+      "amenities": [10, 9, 2, 3]
+    }
+  },
+  {
+    "model": "room.roomtype",
+    "pk": 2,
+    "fields": {
+      "name": "B",
+      "amenities": [2, 3, 4, 5, 9, 10]
+    }
+  },
+  {
+    "model": "room.roomtype",
+    "pk": 3,
+    "fields": {
+      "name": "A",
+      "amenities": [2, 4, 5, 6, 7, 8, 3]
+    }
   }
-},
-{
-  "model": "room.roomtype",
-  "pk": 2,
-  "fields": {
-    "name": "B",
-    "available_rooms": 15,
-    "amenities": [
-      2,
-      3,
-      4,
-      5,
-      9,
-      10
-    ]
-  }
-},
-{
-  "model": "room.roomtype",
-  "pk": 3,
-  "fields": {
-    "name": "A",
-    "available_rooms": 3,
-    "amenities": [
-      2,
-      4,
-      5,
-      6,
-      7,
-      8,
-      3
-    ]
-  }
-}
 ]
