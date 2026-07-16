@@ -5,6 +5,7 @@ from enum import Enum
 from django.core.exceptions import ValidationError
 from datetime import timedelta
 from django.db.models import Q
+from datetime import date
 
 class StatusEnum(Enum):
     """
@@ -109,6 +110,10 @@ class Reservation(models.Model):
         # Validation: The end date CANNOT be more than two weeks from the start date
         if self.end_date > self.start_date + timedelta(weeks=2):
             raise ValidationError("End date must only be within 2 weeks from the start date")
+
+        # Validation: The start date cannot be more than 30 days ahead of the current date
+        if self.start_date > date.today() + timedelta(days=30):
+            raise ValidationError("Reservations can only be made up to 1 month in advance.")
 
         # Validation: room counts cannot be all zero
         if self.is_room_count_zero(): 
