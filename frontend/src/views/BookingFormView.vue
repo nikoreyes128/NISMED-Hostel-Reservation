@@ -163,6 +163,14 @@
       return
     }
 
+    const oneMonthFromNow = new Date();
+    oneMonthFromNow.setMonth(oneMonthFromNow.getMonth() + 1);
+    
+    if (start > oneMonthFromNow) {
+      toast.warning("Reservations can only be made up to 1 month in advance.");
+      return;
+    }
+
     for (let i = 0; i < totalGuests.value; i++) {
       const guest = form.guestDetails[i]
       if (!guest.name || !guest.ageRange) {
