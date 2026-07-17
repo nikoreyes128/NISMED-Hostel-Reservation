@@ -59,6 +59,7 @@ class ReservationAdmin(admin.ModelAdmin):
     list_per_page = 10
     inlines = [ReservedRoomInline]
 
+    @admin.display(description='Name', ordering='guest__name')
     def get_guest_name(self, obj):
         if obj.guest:
             return obj.guest.name
@@ -72,17 +73,15 @@ class ReservedRoomAdmin(admin.ModelAdmin):
     list_per_page = 10
     form = ReservedRoomForm
 
+    @admin.display(description='Start Date', ordering='reservation__start_date')
     def start_date(self, obj):
         return obj.reservation.start_date
 
-    start_date.admin_order_field = 'reservation__start_date'
-    start_date.short_description = 'Start Date'
-
+    @admin.display(description='End Date', ordering='reservation__end_date')
     def end_date(self, obj):
         return obj.reservation.end_date
-    end_date.admin_order_field = 'reservation__end_date'
-    end_date.short_description = 'End Date'
 
+    @admin.display(description='Name', ordering='reservation__guest__name')
     def get_guest_name(self, obj):
         if obj.reservation and obj.reservation.guest:
             return obj.reservation.guest.name
