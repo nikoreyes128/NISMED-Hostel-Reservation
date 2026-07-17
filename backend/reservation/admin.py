@@ -51,15 +51,22 @@ class ReservedRoomForm(forms.ModelForm):
             if qs.exists():
                 raise ValidationError(f"Room '{room}' has already been assigned to this reservation.")
 
+@admin.register(Reservation)
 class ReservationAdmin(admin.ModelAdmin):
-    list_display = ('id', 'guest', 'status', 'reservation_date', 'start_date', 'end_date', 'assigned_a_room')
+    list_display = ('id', 'get_guest_name', 'status', 'reservation_date', 'start_date', 'end_date', 'assigned_a_room')
     list_editable = ('status', 'assigned_a_room')
     list_filter = ('guest', 'status', 'reservation_date')
     list_per_page = 10
     inlines = [ReservedRoomInline]
 
+    def get_guest_name(self, obj):
+        if obj.guest:
+            return obj.guest.name
+        return "No Guest Assigned"
+
+@admin.register(ReservedRoom)
 class ReservedRoomAdmin(admin.ModelAdmin):
-    list_display = ('reservation', 'start_date', 'end_date', 'room_type', 'capacity', 'room', 'room_rate', ) 
+    list_display = ('reservation', 'get_guest_name', 'start_date', 'end_date', 'room_type', 'capacity', 'room', 'room_rate', ) 
     list_editable = ('capacity', )
     list_filter = ('reservation', 'reservation__start_date', 'reservation__end_date', 'room_type', 'room')
     list_per_page = 10
@@ -76,6 +83,11 @@ class ReservedRoomAdmin(admin.ModelAdmin):
     end_date.admin_order_field = 'reservation__end_date'
     end_date.short_description = 'End Date'
 
+    def get_guest_name(self, obj):
+        if obj.reservation and obj.reservation.guest:
+            return obj.reservation.guest.name
+        return "Unknown Guest"
+
     class Media:
         js = (
             'room-dropdown-select.js', 
@@ -83,6 +95,6 @@ class ReservedRoomAdmin(admin.ModelAdmin):
         )
 
 # Register your models here.
-admin.site.register(Reservation, ReservationAdmin)
-admin.site.register(ReservedRoom, ReservedRoomAdmin)
+# admin.site.register(Reservation, ReservationAdmin)
+# admin.site.register(ReservedRoom, ReservedRoomAdmin)
 
