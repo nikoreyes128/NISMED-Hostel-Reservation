@@ -99,7 +99,7 @@
     if (currentPerType > limit) {
       const excess = currentPerType - limit
       form.rooms[key][type] = Math.max(0, form.rooms[key][type] - excess)
-      toast.warning(`There are only ${limit} available rooms for Room Type ${roomLabel}`)
+      toast.warning(`NISMED Hostel only has a total of ${limit} type ${roomLabel} rooms`)
     }
 
     // enforce global max 10 rooms
