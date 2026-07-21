@@ -4,6 +4,8 @@ from .models import Reservation, ReservedRoom
 from django.forms.models import BaseInlineFormSet
 from django.core.exceptions import ValidationError
 
+from rangefilter.filters import DateRangeFilterBuilder
+
 class ReservedRoomInlineFormSet(BaseInlineFormSet):
     def clean(self):
         super().clean()
@@ -55,7 +57,16 @@ class ReservedRoomForm(forms.ModelForm):
 class ReservationAdmin(admin.ModelAdmin):
     list_display = ('id', 'get_guest_name', 'status', 'reservation_date', 'start_date', 'end_date', 'assigned_a_room')
     list_editable = ('status', 'assigned_a_room')
-    list_filter = ('guest', 'status', 'reservation_date')
+
+    # To Do #3
+    list_filter = (
+        'guest', 
+        'status', 
+        ('reservation_date', DateRangeFilterBuilder()),
+        ('start_date', DateRangeFilterBuilder()),
+        ('end_date', DateRangeFilterBuilder())
+    )
+
     list_per_page = 10
     inlines = [ReservedRoomInline]
 
@@ -69,8 +80,17 @@ class ReservationAdmin(admin.ModelAdmin):
 class ReservedRoomAdmin(admin.ModelAdmin):
     list_display = ('reservation', 'get_guest_name', 'start_date', 'end_date', 'room_type', 'capacity', 'room', 'room_rate', ) 
     list_editable = ('capacity', )
-    list_filter = ('reservation', 'reservation__start_date', 'reservation__end_date', 'room_type', 'room')
+
+    # To Do #3
+    list_filter = (
+        'reservation', 
+        ('reservation__start_date', DateRangeFilterBuilder()), 
+        ('reservation__end_date', DateRangeFilterBuilder()), 
+        'room_type', 
+        'room'
+    )
     list_per_page = 10
+
     form = ReservedRoomForm
 
     @admin.display(description='Start Date', ordering='reservation__start_date')

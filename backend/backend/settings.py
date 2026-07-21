@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'room',
     'django_seed',
     'django_filters',
+    'rangefilter', # To Do #3
 ]
 
 MIDDLEWARE = [
