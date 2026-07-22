@@ -69,10 +69,9 @@ class ReservedRoomForm(forms.ModelForm):
 class ReservationAdmin(admin.ModelAdmin):
     list_display = ('id', 'get_guest_name', 'status', 'reservation_date', 'start_date', 'end_date', 'assigned_a_room')
     
-    # Restored 'assigned_a_room' to list_editable to bring the checkbox back
+    # Restored 'assigned_a_room' so you can use the checkboxes again!
     list_editable = ('status', 'assigned_a_room') 
 
-    # Swapped DateRangeFilterBuilder with our custom Jazzmin wrapper
     list_filter = (
         'guest', 
         'status',

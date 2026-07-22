@@ -1,4 +1,4 @@
-{% load i18n rangefilter_compat %}
+{% load i18n %}
 <h3>{% blocktrans with filter_title=title %} By {{ filter_title }} {% endtrans %}</h3>
 <style>
   .admindatefilter .button, .admindatefilter input[type=submit], .admindatefilter input[type=button], .admindatefilter .submit-row input, .admindatefilter a.button {
@@ -9,7 +9,7 @@
   }
 </style>
 <div class="admindatefilter">
-    <!-- Removed <form> wrapper that was hijacking the Jazzmin search -->
+    <!-- Removed <form> wrapper that was hijacking the Jazzmin search AND breaking the Checkboxes -->
     {% for choice in choices %}
         <input type="hidden" id="{{ choice.system_name }}-query-string" value="{{ choice.query_string }}">
     {% endfor %}
@@ -29,5 +29,4 @@
                value="{{ expected_data_field_lte_val }}"
                data-date-format="{{ get_date_format|default:'yyyy-mm-dd' }}">
     </div>
-    <!-- Removed nested search/reset buttons. Jazzmin's primary blue search button will submit these fields natively. -->
 </div>
