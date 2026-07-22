@@ -3,7 +3,6 @@ from django import forms
 from .models import Reservation, ReservedRoom
 from django.forms.models import BaseInlineFormSet
 from django.core.exceptions import ValidationError
-
 from rangefilter.filters import DateRangeFilterBuilder
 
 class ReservedRoomInlineFormSet(BaseInlineFormSet):
@@ -56,15 +55,16 @@ class ReservedRoomForm(forms.ModelForm):
 @admin.register(Reservation)
 class ReservationAdmin(admin.ModelAdmin):
     list_display = ('id', 'get_guest_name', 'status', 'reservation_date', 'start_date', 'end_date', 'assigned_a_room')
-    list_editable = ('status', 'assigned_a_room')
+    
+    # REMOVED 'assigned_a_room' to prevent formset validation crashes 
+    # and enforce assigning rooms via the detailed inline view.
+    list_editable = ('status',) 
 
-    # To Do #3
     list_filter = (
         'guest', 
-        'status', 
-        ('reservation_date', DateRangeFilterBuilder()),
-        ('start_date', DateRangeFilterBuilder()),
-        ('end_date', DateRangeFilterBuilder())
+        'status',
+        'reservation_date', # Restores the default Django date sorting dropdown (Today, Past 7 days, etc.)
+        ('reservation_date', DateRangeFilterBuilder(title="Specific Date Range")) # Keeps your custom range picker
     )
 
     list_per_page = 10
@@ -80,17 +80,8 @@ class ReservationAdmin(admin.ModelAdmin):
 class ReservedRoomAdmin(admin.ModelAdmin):
     list_display = ('reservation', 'get_guest_name', 'start_date', 'end_date', 'room_type', 'capacity', 'room', 'room_rate', ) 
     list_editable = ('capacity', )
-
-    # To Do #3
-    list_filter = (
-        'reservation', 
-        ('reservation__start_date', DateRangeFilterBuilder()), 
-        ('reservation__end_date', DateRangeFilterBuilder()), 
-        'room_type', 
-        'room'
-    )
+    list_filter = ('reservation', 'reservation__start_date', 'reservation__end_date', 'room_type', 'room')
     list_per_page = 10
-
     form = ReservedRoomForm
 
     @admin.display(description='Start Date', ordering='reservation__start_date')
