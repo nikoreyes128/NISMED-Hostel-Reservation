@@ -5,19 +5,6 @@ from django.forms.models import BaseInlineFormSet
 from django.core.exceptions import ValidationError
 from rangefilter.filters import DateRangeFilterBuilder
 
-def JazzminDateRangeFilterBuilder(*args, **kwargs):
-    """
-    Wraps the default DateRangeFilterBuilder to dynamically set our custom template 
-    that strips out conflicting <form> tags, restoring Jazzmin's search button.
-    """
-    # Call the original builder function to get the generated filter class
-    filter_class = DateRangeFilterBuilder(*args, **kwargs)
-    
-    # Attach our custom template to the class before handing it back to Django
-    filter_class.template = 'rangefilter/date_filter_jazzmin.html'
-    
-    return filter_class
-
 class ReservedRoomInlineFormSet(BaseInlineFormSet):
     def clean(self):
         super().clean()
@@ -69,14 +56,16 @@ class ReservedRoomForm(forms.ModelForm):
 class ReservationAdmin(admin.ModelAdmin):
     list_display = ('id', 'get_guest_name', 'status', 'reservation_date', 'start_date', 'end_date', 'assigned_a_room')
     
-    # Restored 'assigned_a_room' so you can use the checkboxes again!
     list_editable = ('status', 'assigned_a_room') 
 
     list_filter = (
         'guest', 
         'status',
-        ('reservation_date', JazzminDateRangeFilterBuilder())
+        ('reservation_date', DateRangeFilterBuilder(title='Specific Date Range'))
     )
+
+    # Ensure the top search bar is disabled to avoid confusion with the range filter's search
+    search_fields = []
 
     list_per_page = 10
     inlines = [ReservedRoomInline]
