@@ -55,20 +55,22 @@ class ReservedRoomForm(forms.ModelForm):
 @admin.register(Reservation)
 class ReservationAdmin(admin.ModelAdmin):
     list_display = ('id', 'get_guest_name', 'status', 'reservation_date', 'start_date', 'end_date', 'assigned_a_room')
-    
-    list_editable = ('status', 'assigned_a_room') 
+    list_editable = ('status', 'assigned_a_room')
 
+    # To Do #3
     list_filter = (
         'guest', 
         'status',
-        ('reservation_date', DateRangeFilterBuilder(title='Specific Date Range'))
+        ('reservation_date', DateRangeFilterBuilder())
     )
-
-    # Ensure the top search bar is disabled to avoid confusion with the range filter's search
-    search_fields = []
 
     list_per_page = 10
     inlines = [ReservedRoomInline]
+
+    class Media:
+        css = {
+            'all': ('hide_blue_search.css',)
+        }
 
     @admin.display(description='Name', ordering='guest__name')
     def get_guest_name(self, obj):
