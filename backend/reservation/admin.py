@@ -5,14 +5,18 @@ from django.forms.models import BaseInlineFormSet
 from django.core.exceptions import ValidationError
 from rangefilter.filters import DateRangeFilterBuilder
 
-# Add this class above ReservedRoomInlineFormSet
-class JazzminDateRangeFilterBuilder(DateRangeFilterBuilder):
+def JazzminDateRangeFilterBuilder(*args, **kwargs):
     """
-    Overrides the default DateRangeFilterBuilder to use a template
-    that strips out conflicting <form> tags, restoring the main
-    Jazzmin blue search button functionality.
+    Wraps the default DateRangeFilterBuilder to dynamically set our custom template 
+    that strips out conflicting <form> tags, restoring Jazzmin's search button.
     """
-    template = 'rangefilter/date_filter_jazzmin.html'
+    # Call the original builder function to get the generated filter class
+    filter_class = DateRangeFilterBuilder(*args, **kwargs)
+    
+    # Attach our custom template to the class before handing it back to Django
+    filter_class.template = 'rangefilter/date_filter_jazzmin.html'
+    
+    return filter_class
 
 class ReservedRoomInlineFormSet(BaseInlineFormSet):
     def clean(self):
