@@ -87,6 +87,9 @@ class ReservationAdmin(admin.ModelAdmin):
         css = {
             'all': ('hide_blue_search.css',)
         }
+        js = (
+            'fix_reset.js',
+        )
 
     @admin.display(description='Name', ordering='guest__name')
     def get_guest_name(self, obj):
